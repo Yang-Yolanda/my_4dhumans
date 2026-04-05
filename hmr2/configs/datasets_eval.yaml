@@ -1,0 +1,31 @@
+H36M-VAL-P2:
+    TYPE: ImageDataset
+    DATASET_FILE: /home/yangz/4D-Humans/hmr2_evaluation_data/h36m_val_p2.npz
+    IMG_DIR: /home/yangz/4D-Humans/data/h36m/
+    KEYPOINT_LIST: [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 43]
+    USE_HIPS: True
+
+3DPW-TEST:
+    TYPE: ImageDataset
+    DATASET_FILE: /home/yangz/4D-Humans/hmr2_evaluation_data/3dpw_test.npz
+    IMG_DIR: /home/yangz/4D-Humans/data/3DPW/
+    KEYPOINT_LIST: [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 43]
+    USE_HIPS: False
+
+POSETRACK-VAL:
+    TYPE: ImageDataset
+    DATASET_FILE: /home/yangz/4D-Humans/hmr2_evaluation_data/posetrack_2018_val.npz
+    IMG_DIR:      /home/yangz/4D-Humans/data/posetrack/
+    KEYPOINT_LIST: [0] # Dummy
+
+LSP-EXTENDED:
+    TYPE: ImageDataset
+    DATASET_FILE: /home/yangz/4D-Humans/hmr2_evaluation_data/hr-lspet_train.npz
+    IMG_DIR:        /home/yangz/4D-Humans/data/hr-lspet/image
+    KEYPOINT_LIST: [0] # Dummy
+
+COCO-VAL:
+    TYPE: ImageDataset
+    DATASET_FILE: /home/yangz/4D-Humans/hmr2_evaluation_data/coco_val.npz
+    IMG_DIR: /home/yangz/4D-Humans/data/coco/
+    KEYPOINT_LIST: [0] # Dummy

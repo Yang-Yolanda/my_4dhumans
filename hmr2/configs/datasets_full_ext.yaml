@@ -1,0 +1,29 @@
+H36M-TRAIN-WMASK:
+    TYPE: ImageDataset
+    URLS: /home/yangz/4D-Humans/data/finetune_ext/h36m/{000000..000312}.tar
+    epoch_size: 313000
+
+MPII-TRAIN-WMASK:
+    TYPE: ImageDataset
+    URLS: /home/yangz/4D-Humans/data/finetune_ext/mpii/{000000..000009}.tar
+    epoch_size: 10000
+
+COCO-TRAIN-2014-WMASK-PRUNED:
+    TYPE: ImageDataset
+    URLS: /home/yangz/4D-Humans/data/finetune_ext/coco/{000000..000034}.tar
+    epoch_size: 35000
+
+AVA-TRAIN-MIDFRAMES-1FPS-WMASK:
+    TYPE: ImageDataset
+    URLS: /home/yangz/4D-Humans/data/finetune_ext/ava/{000000..000092}.tar
+    epoch_size: 93000
+
+AIC-TRAIN-WMASK:
+    TYPE: ImageDataset
+    URLS: /home/yangz/4D-Humans/data/finetune_ext/aic/{000000..000104}.tar
+    epoch_size: 105000
+
+MPI-INF-TRAIN-PRUNED:
+    TYPE: ImageDataset
+    URLS: /home/yangz/4D-Humans/data/finetune_ext/mpi-inf-train-pruned/{000000..000006}.tar
+    epoch_size: 7000
