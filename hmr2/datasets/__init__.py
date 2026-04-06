@@ -65,8 +65,9 @@ class HMR2DataModule(pl.LightningDataModule):
             cfg (CfgNode): Config file as a yacs CfgNode containing necessary dataset info.
         """
         if self.train_dataset == None:
-            self.train_dataset = MixedWebDataset(self.cfg, self.dataset_cfg, train=True).with_epoch(100_000).shuffle(4000)
-            self.val_dataset = MixedWebDataset(self.cfg, self.dataset_cfg, train=False).shuffle(4000)
+            buffer_size = self.cfg.TRAIN.get('SHUFFLE_BUFFER', 1000)
+            self.train_dataset = MixedWebDataset(self.cfg, self.dataset_cfg, train=True).with_epoch(100_000).shuffle(buffer_size)
+            self.val_dataset = MixedWebDataset(self.cfg, self.dataset_cfg, train=False).shuffle(buffer_size)
             mocap_key = self.cfg.DATASETS.get('MOCAP', None)
             if mocap_key and mocap_key in self.dataset_cfg:
                 mocap_file = self.dataset_cfg[mocap_key].get('DATASET_FILE', None)
