@@ -160,14 +160,34 @@ class Evaluator:
         num_samples = pred_keypoints_3d.shape[1]
         gt_keypoints_3d = batch['keypoints_3d'][:, :, :-1].unsqueeze(1).repeat(1, num_samples, 1, 1)
 
-        # Align predictions and ground truth such that the pelvis location is at the origin
-        pred_keypoints_3d -= pred_keypoints_3d[:, :, [self.pelvis_ind]]
-        gt_keypoints_3d -= gt_keypoints_3d[:, :, [self.pelvis_ind]]
+        # Extract evaluation joints first (B, 1, 14, 3)
+        pred_eval = pred_keypoints_3d[:, :, self.keypoint_list]
+        gt_eval = gt_keypoints_3d[:, :, self.keypoint_list]
+
+        # Determine Root: Hip-Mean within the eval subset
+        # In LSP14 (which is [25...43]), index 2 is RHip, index 3 is LHip
+        LHIP_IND = 3
+        RHIP_IND = 2
+        
+        # Absolute Error before alignment
+        abs_err = torch.sqrt(((pred_eval - gt_eval) ** 2).sum(dim=-1)).mean(dim=-1).cpu().numpy()
+        mpjpe_abs = 1000 * abs_err
+
+        # Calculate Hip-Mean Root
+        pred_root = (pred_eval[:, :, [LHIP_IND]] + pred_eval[:, :, [RHIP_IND]]) / 2.0
+        gt_root = (gt_eval[:, :, [LHIP_IND]] + gt_eval[:, :, [RHIP_IND]]) / 2.0
+
+        # Root Alignment
+        pred_eval -= pred_root
+        gt_eval -= gt_root
 
         # Compute joint errors
-        mpjpe, re = eval_pose(pred_keypoints_3d.reshape(batch_size * num_samples, -1, 3)[:, self.keypoint_list], gt_keypoints_3d.reshape(batch_size * num_samples, -1 ,3)[:, self.keypoint_list])
-        mpjpe = mpjpe.reshape(batch_size, num_samples)
+        mpjpe_root_raw, re = eval_pose(pred_eval.reshape(batch_size * num_samples, -1, 3), gt_eval.reshape(batch_size * num_samples, -1, 3))
+        
+        mpjpe = mpjpe_root_raw.reshape(batch_size, num_samples)
+        mpjpe_abs = mpjpe_abs.reshape(batch_size, num_samples)
         re = re.reshape(batch_size, num_samples)
+
 
         # Compute 2d keypoint errors
         pred_keypoints_2d = output['pred_keypoints_2d'].detach()

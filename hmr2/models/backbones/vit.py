@@ -326,11 +326,23 @@ class ViT(nn.Module):
             # since the first element for pos embed (sin-cos manner) is zero, it will cause no difference
             x = x + self.pos_embed[:, 1:] + self.pos_embed[:, :1]
 
-        for blk in self.blocks:
+        import os
+        truncate_k = os.getenv("NVIT_TRUNCATE_BLOCKS", "")
+        exit_k = os.getenv("NVIT_EARLY_EXIT_BLOCK", "")
+        truncate_k = int(truncate_k) if truncate_k != "" else None
+        exit_k = int(exit_k) if exit_k != "" else None
+
+        for i, blk in enumerate(self.blocks):
+            if truncate_k is not None and i >= truncate_k:
+                break
+
             if self.use_checkpoint:
                 x = checkpoint.checkpoint(blk, x)
             else:
                 x = blk(x)
+
+            if exit_k is not None and i == exit_k - 1:
+                break
 
         x = self.last_norm(x)
 
