@@ -1,0 +1,28 @@
+# @package _global_
+
+defaults:
+  - hmr_vit_transformer.yaml
+
+task_name: "baseline_trunc_11"
+
+MODEL:
+  BACKBONE:
+    USE_ADAPTIVE_NVIT: False
+    depth: 32  # Standard ViT-H depth, we will truncate via ENV VAR
+    USE_CHECKPOINT: True # For High-Batch Stability
+  SMPL_HEAD:
+    TYPE: transformer_decoder # Standard head for baseline
+
+FREEZE_DEPTH: 11 # Trigger surgical freezing of the truncated backbone
+
+trainer:
+  max_epochs: 1
+  log_every_n_steps: 10
+
+TRAIN:
+  BATCH_SIZE: 16
+  LR: 1e-4 # Slightly higher for fast head alignment
+
+GENERAL:
+  NUM_WORKERS: 4
+  CHECKPOINT_STEPS: 500
